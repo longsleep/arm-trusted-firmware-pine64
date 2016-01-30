@@ -31,6 +31,8 @@
 PROJECT = fip_create
 OBJECTS = fip_create.o
 
+
+
 CFLAGS = -Wall -Werror -pedantic -std=c99
 ifeq (${DEBUG},1)
   CFLAGS += -g -O0 -DDEBUG
@@ -51,7 +53,7 @@ all: ${PROJECT}
 
 ${PROJECT}: ${OBJECTS} Makefile
 	@echo "  LD      $@"
-	${Q}${CC} ${OBJECTS} -o $@
+	${Q}${CC} ${OBJECTS} -o $@ -static
 
 %.o: %.c %.h Makefile
 	@echo "  CC      $<"

@@ -35,7 +35,7 @@
 #include <platform_def.h>
 #include <string.h>
 #include <xlat_tables.h>
-
+#include <stdio.h>
 
 #ifndef DEBUG_XLAT_TABLE
 #define DEBUG_XLAT_TABLE 0
@@ -349,3 +349,58 @@ DEFINE_ENABLE_MMU_EL(1,
 DEFINE_ENABLE_MMU_EL(3,
 		TCR_EL3_RES1 | (tcr_ps_bits << TCR_EL3_PS_SHIFT),
 		tlbialle3)
+
+#if 0
+void enable_mmu_el3(uint32_t flags)				
+{								
+		uint64_t mair, tcr, ttbr;				
+		uint32_t sctlr;						
+		uint32_t _tcr_extra = TCR_EL3_RES1 | (tcr_ps_bits << TCR_EL3_PS_SHIFT);
+		
+		
+		assert(IS_IN_EL(_el));					
+		assert((read_sctlr_el3() & SCTLR_M_BIT) == 0);	
+									
+		/* Set attributes in the right indices of the MAIR */	
+		mair = MAIR_ATTR_SET(ATTR_DEVICE, ATTR_DEVICE_INDEX);	
+		mair |= MAIR_ATTR_SET(ATTR_IWBWA_OWBWA_NTR,		
+				ATTR_IWBWA_OWBWA_NTR_INDEX);		
+		write_mair_el3(mair);				
+									
+		/* Invalidate TLBs at the current exception level */	
+		tlbialle3();						
+									
+		/* Set TCR bits as well. */				
+		/* Inner & outer WBWA & shareable + T0SZ = 32 */	
+		tcr = TCR_SH_INNER_SHAREABLE | TCR_RGN_OUTER_WBA |	
+			TCR_RGN_INNER_WBA |				
+			(64 - __builtin_ctzl(ADDR_SPACE_SIZE));		
+		tcr |= _tcr_extra;					
+		write_tcr_el3(tcr);					
+									
+		/* Set TTBR bits as well */				
+		ttbr = (uint64_t) l1_xlation_table;			
+		write_ttbr0_el3(ttbr);				
+									
+		/* Ensure all translation table writes have drained */	
+		/* into memory, the TLB invalidation is complete, */	
+		/* and translation register writes are committed */	
+		/* before enabling the MMU */				
+		dsb();							
+		isb();							
+									
+		sctlr = read_sctlr_el3();				
+		sctlr |= SCTLR_WXN_BIT | SCTLR_M_BIT;			
+									
+		if (flags & DISABLE_DCACHE)				
+			sctlr &= ~SCTLR_C_BIT;				
+		else							
+			sctlr |= SCTLR_C_BIT;				
+									
+		write_sctlr_el3(sctlr);				
+									
+		/* Ensure the MMU enable takes effect immediately */	
+		isb();							
+}
+#endif
+

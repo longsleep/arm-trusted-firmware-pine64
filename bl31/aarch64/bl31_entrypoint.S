@@ -40,7 +40,6 @@
 	 * executed only by the primary cpu.
 	 * -----------------------------------------------------
 	 */
-
 func bl31_entrypoint
 	/* ---------------------------------------------------------------
 	 * Preceding bootloader has populated x0 with a pointer to a
@@ -49,8 +48,16 @@ func bl31_entrypoint
 	 * ---------------------------------------------------------------
 	 */
 #if !RESET_TO_BL31
-	mov	x20, x0
-	mov	x21, x1
+	/*
+	*AA32 warmreset to AA64, the high 32bit in reg R0,R1 is unpredictable
+	*/
+	/*mov	x20, x0*/
+	/*mov	x21, x1*/
+
+	mov	x20, 0
+	mov	x21, 0
+	mov	w20, w0
+	mov	w21, w1
 #else
 	/* ---------------------------------------------
 	 * Set the CPU endianness before doing anything
@@ -153,11 +160,6 @@ func bl31_entrypoint
 	ldr	x1, =__COHERENT_RAM_UNALIGNED_SIZE__
 	bl	zeromem16
 
-	/* ---------------------------------------------
-	 * Initialize the cpu_ops pointer.
-	 * ---------------------------------------------
-	 */
-	bl	init_cpu_ops
 
 	/* ---------------------------------------------
 	 * Use SP_EL0 for the C runtime stack.

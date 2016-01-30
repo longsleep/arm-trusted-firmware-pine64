@@ -105,7 +105,8 @@ func prepare_cluster_pwr_dwn
 
 	/*
 	 * Initializes the cpu_ops_ptr if not already initialized
-	 * in cpu_data. This can be called without a runtime stack.
+	 * in cpu_data. This can be called without a runtime stack, but may
+	 * only be called after the MMU is enabled.
 	 * clobbers: x0 - x6, x10
 	 */
 	.globl	init_cpu_ops
@@ -119,7 +120,7 @@ func init_cpu_ops
 	cmp	x0, #0
 	ASM_ASSERT(ne)
 #endif
-	str	x0, [x6, #CPU_DATA_CPU_OPS_PTR]
+	str	x0, [x6, #CPU_DATA_CPU_OPS_PTR]!
 	mov x30, x10
 1:
 	ret

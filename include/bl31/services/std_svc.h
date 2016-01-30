@@ -38,6 +38,7 @@
 /*					0x8400ff02 is reserved */
 #define ARM_STD_SVC_VERSION		0x8400ff03
 
+
 /* ARM Standard Service Calls version numbers */
 #define STD_SVC_VERSION_MAJOR		0x0
 #define STD_SVC_VERSION_MINOR		0x1

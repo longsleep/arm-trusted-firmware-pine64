@@ -27,7 +27,16 @@
 # ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 # POSSIBILITY OF SUCH DAMAGE.
 #
+#check gcc tools chain
+arm_toolchain_check=$(strip $(shell if [  -d ../toolchain/gcc-arm -a -d ../toolchain/gcc-aarch64 ];  then  echo yes;  fi ) )
+ifneq ("$(arm_toolchain_check)", "yes")
+  $(info "gcc tools chain not exist")
+  $(info "Please run ./build.sh -t under brandy directory at the first time")
+  $(error "")
+endif
 
+CROSS_COMPILE = ../toolchain/gcc-aarch64/bin/aarch64-linux-gnu-
+BL33= 
 #
 # Trusted Firmware Version
 #
@@ -41,11 +50,11 @@ VERSION_MINOR		:= 0
 # Build verbosity
 V			:= 0
 # Debug build
-DEBUG			:= 0
+DEBUG			:= 1
 # Build architecture
 ARCH 			:= aarch64
 # Build platform
-DEFAULT_PLAT		:= fvp
+DEFAULT_PLAT		:= sun50iw1p1
 PLAT			:= ${DEFAULT_PLAT}
 # SPD choice
 SPD			:= none
@@ -227,14 +236,13 @@ ASFLAGS			+= 	-nostdinc -ffreestanding -Wa,--fatal-warnings	\
 				-Werror -Wmissing-include-dirs			\
 				-mgeneral-regs-only -D__ASSEMBLY__		\
 				${DEFINES} ${INCLUDES}
-CFLAGS			+= 	-nostdinc -pedantic -ffreestanding -Wall	\
+CFLAGS			+= 	-nostdinc -ffreestanding -Wall	\
 				-Werror -Wmissing-include-dirs			\
 				-mgeneral-regs-only -std=c99 -c -Os		\
 				${DEFINES} ${INCLUDES}
 CFLAGS			+=	-ffunction-sections -fdata-sections
-
 LDFLAGS			+=	--fatal-warnings -O1
-LDFLAGS			+=	--gc-sections
+LDFLAGS			+=	--gc-sections --fix-cortex-a53-843419
 
 
 CC			:=	${CROSS_COMPILE}gcc
@@ -249,7 +257,7 @@ PP			:=	${CROSS_COMPILE}gcc -E ${CFLAGS}
 
 # Variables for use with Firmware Image Package
 FIPTOOLPATH		?=	tools/fip_create
-FIPTOOL			?=	${FIPTOOLPATH}/fip_create
+FIPTOOL			?=	${FIPTOOLPATH}/fip_create 
 fiptool:		${FIPTOOL}
 fip:			${BUILD_PLAT}/fip.bin
 
@@ -421,6 +429,11 @@ $(BIN) : $(ELF)
 	@echo
 	@echo "Built $$@ successfully"
 	@echo
+ifeq (bl31.bin,$(notdir ${BIN}))
+	$${Q}git show HEAD --pretty=format:"%H" | head -n 1 > cur.log
+	$${Q}./tools/add_hash_bl31.sh -f $$@ -m bl31
+endif
+	@cp -v $$@ ../../tools/pack/chips/$(DEFAULT_PLAT)/bin/
 
 .PHONY : bl$(1)
 bl$(1) : $(BUILD_DIR) $(BIN) $(DUMP)
@@ -481,6 +494,10 @@ cscope:
 	@echo "  CSCOPE"
 	${Q}find ${CURDIR} -name "*.[chsS]" > cscope.files
 	${Q}cscope -b -q -k
+
+ctag:
+		ctags  -R --c++-kinds=+p --fields=+iaS --extra=+q -w -o ctags  `find $(CURDIR) \
+						-name '*.[chS]' -print`
 
 help:
 	@echo "usage: ${MAKE} PLAT=<${HELP_PLATFORMS}> <all|bl1|bl2|bl31|distclean|clean|checkcodebase|checkpatch>"

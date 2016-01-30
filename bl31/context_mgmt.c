@@ -183,6 +183,13 @@ void cm_init_context(uint64_t mpidr, const entry_point_info_t *ep)
 	 */
 	sctlr_elx = EP_GET_EE(ep->h.attr) ? SCTLR_EE_BIT : 0;
 	sctlr_elx |= SCTLR_EL1_RES1;
+	
+	//if  use AA32 SVC
+	if(GET_M32(ep->spsr) == MODE32_svc)
+	{
+		sctlr_elx |= 1<<5;//AArch32 CP15 barrier operations enabled
+	}
+	
 	write_ctx_reg(get_sysregs_ctx(ctx), CTX_SCTLR_EL1, sctlr_elx);
 
 	if ((GET_RW(ep->spsr) == MODE_RW_64

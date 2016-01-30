@@ -35,8 +35,9 @@
 #include <stdint.h>
 #include <uuid.h>
 
+
 /* Standard Service UUID */
-DEFINE_SVC_UUID(arm_svc_uid,
+DEFINE_SVC_UUID(std_svc_uid,
 		0x108d905b, 0xf863, 0x47e8, 0xae, 0x2d,
 		0xc0, 0xfb, 0x56, 0x41, 0xf6, 0xe2);
 
@@ -71,7 +72,7 @@ uint64_t std_svc_smc_handler(uint32_t smc_fid,
 		return psci_smc_handler(smc_fid, x1, x2, x3, x4, cookie,
 				handle, flags);
 	}
-
+	
 	switch (smc_fid) {
 	case ARM_STD_SVC_CALL_COUNT:
 		/*
@@ -82,12 +83,11 @@ uint64_t std_svc_smc_handler(uint32_t smc_fid,
 
 	case ARM_STD_SVC_UID:
 		/* Return UID to the caller */
-		SMC_UUID_RET(handle, arm_svc_uid);
+		SMC_UUID_RET(handle, std_svc_uid);
 
 	case ARM_STD_SVC_VERSION:
 		/* Return the version of current implementation */
 		SMC_RET2(handle, STD_SVC_VERSION_MAJOR, STD_SVC_VERSION_MINOR);
-
 	default:
 		WARN("Unimplemented Standard Service Call: 0x%x \n", smc_fid);
 		SMC_RET1(handle, SMC_UNK);

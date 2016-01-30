@@ -140,7 +140,11 @@ int get_power_on_target_afflvl()
 	 * Sanity check the state of the cpu. It should be either suspend or "on
 	 * pending"
 	 */
-	state = psci_get_state(node);
+	do
+	{
+		state = psci_get_state(node); //wait cpu0 set this state --by wangwei
+	}while(state != PSCI_STATE_SUSPEND && state != PSCI_STATE_ON_PENDING);
+
 	assert(state == PSCI_STATE_SUSPEND || state == PSCI_STATE_ON_PENDING);
 #endif
 
@@ -479,7 +483,6 @@ void psci_afflvl_power_on_finish(int start_afflvl,
 	mpidr_aff_map_nodes_t mpidr_nodes;
 	int rc;
 	unsigned int max_phys_off_afflvl;
-
 
 	/*
 	 * Collect the pointers to the nodes in the topology tree for

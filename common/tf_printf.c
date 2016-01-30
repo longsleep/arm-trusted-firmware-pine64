@@ -115,6 +115,14 @@ loop:
 
 				unsigned_num_print(unum, 16);
 				break;
+			case 'p':
+				unum =(uint64_t)va_arg(args, void *);
+				unsigned_num_print(unum, 16);
+				break;
+			case 'z':
+				fmt++;
+				bit64 = sizeof(long) == 0x8 ? 1:0;
+				goto loop;
 			case 'l':
 				bit64 = 1;
 				fmt++;
@@ -133,6 +141,11 @@ loop:
 			}
 			fmt++;
 			continue;
+		}
+		//for windos newline"\r\n"
+		else if (*fmt == '\n')
+		{
+			putchar('\r');
 		}
 		putchar(*fmt++);
 	}

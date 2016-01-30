@@ -33,6 +33,7 @@
 
 int console_init(unsigned long base_addr,
 		unsigned int uart_clk, unsigned int baud_rate);
+int console_exit(void);
 int console_putc(int c);
 int console_getc(void);
 

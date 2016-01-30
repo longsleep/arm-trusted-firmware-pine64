@@ -71,8 +71,11 @@ void bl31_lib_init(void)
  ******************************************************************************/
 void bl31_main(void)
 {
+	extern char bl31_hash_value[64];
+
 	NOTICE("BL3-1: %s\n", version_string);
 	NOTICE("BL3-1: %s\n", build_message);
+	NOTICE("BL3-1 commit: %s\n", bl31_hash_value);
 
 	/* Perform remaining generic architectural setup from EL3 */
 	bl31_arch_setup();
@@ -89,7 +92,7 @@ void bl31_main(void)
 
 	/* Clean caches before re-entering normal world */
 	dcsw_op_all(DCCSW);
-
+	
 	/*
 	 * All the cold boot actions on the primary cpu are done. We now need to
 	 * decide which is the next image (BL32 or BL33) and how to execute it.
@@ -105,8 +108,9 @@ void bl31_main(void)
 	 */
 	if (bl32_init) {
 		INFO("BL3-1: Initializing BL3-2\n");
-		(*bl32_init)();
+		//(*bl32_init)();
 	}
+	//__asm__ __volatile__ ("b .");
 	/*
 	 * We are ready to enter the next EL. Prepare entry into the image
 	 * corresponding to the desired security state after the next ERET.

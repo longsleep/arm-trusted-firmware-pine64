@@ -115,8 +115,11 @@ int psci_cpu_suspend(unsigned int power_state,
 				 power_state,
 				 MPIDR_AFFLVL0,
 				 target_afflvl);
-	if (rc == PSCI_E_SUCCESS)
+	if (rc == PSCI_E_SUCCESS) {
+		dcsw_op_all(DCCISW);
 		psci_power_down_wfi();
+	}
+
 	assert(rc == PSCI_E_INVALID_PARAMS);
 	return rc;
 }
@@ -139,8 +142,11 @@ int psci_cpu_off(void)
 	 * successfully completed. Enter a wfi loop which will allow the
 	 * power controller to physically power down this cpu.
 	 */
-	if (rc == PSCI_E_SUCCESS)
+	if (rc == PSCI_E_SUCCESS) {
+		dcsw_op_all(DCCISW);
 		psci_power_down_wfi();
+	}
+
 
 	/*
 	 * The only error cpu_off can return is E_DENIED. So check if that's

@@ -191,4 +191,6 @@ void bl31_plat_enable_mmu(uint32_t flags);
  ******************************************************************************/
 void bl32_plat_enable_mmu(uint32_t flags);
 
+void platform_smp_init(void);
+
 #endif /* __PLATFORM_H__ */
