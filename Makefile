@@ -27,15 +27,8 @@
 # ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 # POSSIBILITY OF SUCH DAMAGE.
 #
-#check gcc tools chain
-arm_toolchain_check=$(strip $(shell if [  -d ../toolchain/gcc-arm -a -d ../toolchain/gcc-aarch64 ];  then  echo yes;  fi ) )
-ifneq ("$(arm_toolchain_check)", "yes")
-  $(info "gcc tools chain not exist")
-  $(info "Please run ./build.sh -t under brandy directory at the first time")
-  $(error "")
-endif
 
-CROSS_COMPILE = ../toolchain/gcc-aarch64/bin/aarch64-linux-gnu-
+CROSS_COMPILE = aarch64-linux-gnu-
 BL33= 
 #
 # Trusted Firmware Version
@@ -242,7 +235,7 @@ CFLAGS			+= 	-nostdinc -ffreestanding -Wall	\
 				${DEFINES} ${INCLUDES}
 CFLAGS			+=	-ffunction-sections -fdata-sections
 LDFLAGS			+=	--fatal-warnings -O1
-LDFLAGS			+=	--gc-sections --fix-cortex-a53-843419
+LDFLAGS			+=	--gc-sections
 
 
 CC			:=	${CROSS_COMPILE}gcc
