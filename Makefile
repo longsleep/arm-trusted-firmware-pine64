@@ -249,7 +249,7 @@ PP			:=	${CROSS_COMPILE}gcc -E ${CFLAGS}
 
 # Variables for use with Firmware Image Package
 FIPTOOLPATH		?=	tools/fip_create
-FIPTOOL			?=	${FIPTOOLPATH}/fip_create 
+FIPTOOL			?=	${FIPTOOLPATH}/fip_create
 fiptool:		${FIPTOOL}
 fip:			${BUILD_PLAT}/fip.bin
 
