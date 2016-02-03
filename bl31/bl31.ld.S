@@ -32,7 +32,6 @@
 
 OUTPUT_FORMAT(PLATFORM_LINKER_FORMAT)
 OUTPUT_ARCH(PLATFORM_LINKER_ARCH)
-ENTRY(bl31_entrypoint)
 
 
 MEMORY {
@@ -48,7 +47,9 @@ SECTIONS
 
     ro . : {
         __RO_START__ = .;
-        *bl31_entrypoint.o(.text*)
+        KEEP(*head_data.o(.head_data*))
+        KEEP(*bl31_hash.o(.hash_data*))
+        KEEP(*bl31_entrypoint.o(.text*))
         *(.text*)
         *(.rodata*)
 

@@ -342,7 +342,7 @@ func do_crash_reporting
 	plat_print_gic_regs
 
 	/* Print the interconnect registers */
-	plat_print_interconnect_regs
+	/*plat_print_interconnect_regs*/  
 
 	/* Done reporting */
 	b	crash_panic

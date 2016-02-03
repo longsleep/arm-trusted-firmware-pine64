@@ -255,7 +255,7 @@ uint64_t tspd_smc_handler(uint32_t smc_fid,
 #if TSP_INIT_ASYNC
 	entry_point_info_t *next_image_info;
 #endif
-
+	WARN("tspd_smc_handler call\n");
 	/* Determine which security state this SMC originated from */
 	ns = is_caller_non_secure(flags);
 
@@ -358,6 +358,7 @@ uint64_t tspd_smc_handler(uint32_t smc_fid,
 	 * finished initialising itself after a cold boot
 	 */
 	case TSP_ENTRY_DONE:
+		WARN("tspd_smc_handler call:TSP_ENTRY_DONE\n");
 		if (ns)
 			SMC_RET1(handle, SMC_UNK);
 

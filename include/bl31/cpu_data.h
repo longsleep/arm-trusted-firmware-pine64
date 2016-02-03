@@ -104,6 +104,7 @@ static inline struct cpu_data *_cpu_data(void)
  *************************************************************************/
 
 void init_cpu_data_ptr(void);
+void init_cpu_ops(void);
 
 #define get_cpu_data(_m)		   _cpu_data()->_m
 #define set_cpu_data(_m, _v)		   _cpu_data()->_m = _v
@@ -115,6 +116,10 @@ void init_cpu_data_ptr(void);
 #define flush_cpu_data(_m)	   flush_dcache_range((uint64_t) 	  \
 						      &(_cpu_data()->_m), \
 						      sizeof(_cpu_data()->_m))
+#define flush_cpu_data_by_index(_ix, _m)	\
+				   flush_dcache_range((uint64_t)	  \
+					 &(_cpu_data_by_index(_ix)->_m),  \
+					 sizeof(_cpu_data_by_index(_ix)->_m))
 
 
 #endif /* __ASSEMBLY__ */

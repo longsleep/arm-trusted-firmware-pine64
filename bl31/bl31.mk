@@ -28,7 +28,9 @@
 # POSSIBILITY OF SUCH DAMAGE.
 #
 
-BL31_SOURCES		+=	bl31/bl31_main.c				\
+BL31_SOURCES+=	bl31/head_data.c				\
+				bl31/bl31_hash.c				\
+				bl31/bl31_main.c				\
 				bl31/context_mgmt.c				\
 				bl31/cpu_data_array.c				\
 				bl31/runtime_svc.c				\

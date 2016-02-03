@@ -36,6 +36,7 @@
 #include <context_mgmt.h>
 #include <platform.h>
 #include <stddef.h>
+#include <debug.h>
 #include "psci_private.h"
 
 /*******************************************************************************
@@ -194,6 +195,7 @@ static void psci_init_aff_map_node(unsigned long mpidr,
 		 * instance through the context management library.
 		 */
 		linear_id = platform_get_core_pos(mpidr);
+		//NOTICE("linear_id %d, mpidr %d max %d\n",linear_id,mpidr,PLATFORM_CORE_COUNT );
 		assert(linear_id < PLATFORM_CORE_COUNT);
 
 		/* Invalidate the suspend context for the node */
@@ -210,10 +212,11 @@ static void psci_init_aff_map_node(unsigned long mpidr,
 				      psci_svc_cpu_data.max_phys_off_afflvl,
 				      PSCI_INVALID_DATA);
 
+		flush_cpu_data_by_index(linear_id, psci_svc_cpu_data);
+
 		cm_set_context_by_mpidr(mpidr,
 					(void *) &psci_ns_context[linear_id],
 					NON_SECURE);
-
 	}
 
 	return;
