@@ -27,16 +27,7 @@
 # ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 # POSSIBILITY OF SUCH DAMAGE.
 #
-#check gcc tools chain
-arm_toolchain_check=$(strip $(shell if [  -d ../toolchain/gcc-arm -a -d ../toolchain/gcc-aarch64 ];  then  echo yes;  fi ) )
-ifneq ("$(arm_toolchain_check)", "yes")
-  $(info "gcc tools chain not exist")
-  $(info "Please run ./build.sh -t under brandy directory at the first time")
-  $(error "")
-endif
 
-CROSS_COMPILE = ../toolchain/gcc-aarch64/bin/aarch64-linux-gnu-
-BL33= 
 #
 # Trusted Firmware Version
 #
@@ -50,11 +41,11 @@ VERSION_MINOR		:= 0
 # Build verbosity
 V			:= 0
 # Debug build
-DEBUG			:= 1
+DEBUG			:= 0
 # Build architecture
 ARCH 			:= aarch64
 # Build platform
-DEFAULT_PLAT		:= sun50iw1p1
+DEFAULT_PLAT		:= fvp
 PLAT			:= ${DEFAULT_PLAT}
 # SPD choice
 SPD			:= none
