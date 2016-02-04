@@ -81,7 +81,8 @@ void prepare_nonsec_os_entry(uint64_t kernel_addr, uint64_t dtb_addr)
 	/* Program EL3 registers to enable entry into the next EL */
 	memset(&next_image_info, 0, sizeof(next_image_info));
 	SET_SECURITY_STATE(next_image_info.h.attr, NON_SECURE);
-	next_image_info.spsr = SPSR_64(MODE_EL1, MODE_SP_ELX, DISABLE_ALL_EXCEPTIONS);
+	next_image_info.spsr = SPSR_64(MODE_EL2, MODE_SP_ELX,
+				       DISABLE_ALL_EXCEPTIONS);
 	next_image_info.pc = kernel_addr;
 	next_image_info.args.arg0 = dtb_addr;
 	
