@@ -37,21 +37,21 @@
 #define DEBUG_LEVEL_WRN    ((uint32_t)1 << 2)
 #define DEBUG_LEVEL_ERR    ((uint32_t)1 << 3)
 
-#define ARISC_INF(format, args...)                          \
+#define ARISC_INF(...)                          \
 	if(DEBUG_LEVEL_INF & (0xf0 >> (arisc_debug_level +1)))  \
-		tf_printf("[SCP] :"format, ##args);
+		tf_printf("[SCP] :" __VA_ARGS__);
 
-#define ARISC_LOG(format, args...)                                      \
+#define ARISC_LOG(...)                                      \
 	if(DEBUG_LEVEL_LOG & (0xf0 >> (arisc_debug_level +1)))	\
-		tf_printf("[SCP] :"format, ##args);
+		tf_printf("[SCP] :" __VA_ARGS__);
 
-#define ARISC_WRN(format, args...)                          \
+#define ARISC_WRN(...)                          \
 	if(DEBUG_LEVEL_WRN & (0xf0 >> (arisc_debug_level +1)))  \
-		tf_printf("[SCP WARING] :"format, ##args);
+		tf_printf("[SCP WARING] :" __VA_ARGS__);
 
-#define ARISC_ERR(format, args...)                          \
+#define ARISC_ERR(...)                          \
 	if(DEBUG_LEVEL_ERR & (0xf0 >> (arisc_debug_level +1)))  \
-		tf_printf("[SCP ERROR] :"format, ##args);
+		tf_printf("[SCP ERROR] :" __VA_ARGS__);
 
 #else /* ARISC_DEBUG_ON */
 #define ARISC_INF(...)

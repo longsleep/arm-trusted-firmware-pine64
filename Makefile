@@ -227,7 +227,7 @@ ASFLAGS			+= 	-nostdinc -ffreestanding -Wa,--fatal-warnings	\
 				-Werror -Wmissing-include-dirs			\
 				-mgeneral-regs-only -D__ASSEMBLY__		\
 				${DEFINES} ${INCLUDES}
-CFLAGS			+= 	-nostdinc -ffreestanding -Wall	\
+CFLAGS			+= 	-nostdinc -pedantic -ffreestanding -Wall	\
 				-Werror -Wmissing-include-dirs			\
 				-mgeneral-regs-only -std=c99 -c -Os		\
 				${DEFINES} ${INCLUDES}
