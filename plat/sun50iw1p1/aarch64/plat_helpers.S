@@ -28,87 +28,21 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include <arch.h>
 #include <asm_macros.S>
-#include <bl_common.h>
-#include <cortex_a57.h>
-#include <cpu_macros.S>
-#include <platform_def.h>
 #include "../sunxi_def.h"
 
 	.globl	plat_crash_console_init
 	.globl	plat_crash_console_putc
-	.globl	plat_report_exception
-	.globl	plat_reset_handler
-	.globl	platform_get_core_pos
 	.globl	platform_mem_init
 	.globl	platform_smp_init
-
-	/* Define a crash console for the plaform */
-#define JUNO_CRASH_CONSOLE_BASE		0
-
-	/* ---------------------------------------------
-	 * void plat_report_exception(unsigned int type)
-	 * Function to report an unhandled exception
-	 * with platform-specific means.
-	 * On Juno platform, it updates the LEDs
-	 * to indicate where we are
-	 * ---------------------------------------------
-	 */
-func plat_report_exception
-
-	ret
-
-	/*
-	 * Return 0 to 3 for the A53s and 4 or 5 for the A57s
-	 */
-func platform_get_core_pos
-	and	x1, x0, #MPIDR_CPU_MASK
-	and	x0, x0, #MPIDR_CLUSTER_MASK
-	add	x0, x1, x0, LSR #6
-	ret
-
 
 	/* -----------------------------------------------------
 	 * void platform_mem_init(void);
 	 *
-	 * We don't need to carry out any memory initialization
-	 * on Juno. The Secure RAM is accessible straight away.
+	 * We don't need to carry out any memory initialization.
 	 * -----------------------------------------------------
 	 */
 func platform_mem_init
-	ret
-
-	/* -----------------------------------------------------
-	 * void plat_reset_handler(void);
-	 *
-	 * Implement workaround for defect id 831273 by enabling
-	 * an event stream every 65536 cycles and set the L2 RAM
-	 * latencies for Cortex-A57.
-	 * -----------------------------------------------------
-	 */
-func plat_reset_handler
-	/* Read the MIDR_EL1 */
-	mrs	x0, midr_el1
-	ubfx	x1, x0, MIDR_PN_SHIFT, #12
-	cmp     w1, #((CORTEX_A57_MIDR >> MIDR_PN_SHIFT) & MIDR_PN_MASK)
-	b.ne    1f
-
-	/* Change the L2 Data and Tag Ram latency to 3 cycles */
-	mov	x0, #(L2_DATA_RAM_LATENCY_3_CYCLES |    \
-			(L2_TAG_RAM_LATENCY_3_CYCLES << \
-			 L2CTLR_TAG_RAM_LATENCY_SHIFT))
-	msr     L2CTLR_EL1, x0
-
-1:
-	/* ---------------------------------------------
-	* Enable the event stream every 65536 cycles
-	* ---------------------------------------------
-	*/
-	mov     x0, #(0xf << EVNTI_SHIFT)
-	orr     x0, x0, #EVNTEN_BIT
-	msr     CNTKCTL_EL1, x0
-	isb
 	ret
 
 func platform_smp_init
