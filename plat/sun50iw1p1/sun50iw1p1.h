@@ -71,11 +71,11 @@
 #define SUNXI_SPC_BASE			         (0x01c23400L)
 #define SUNXI_THC_BASE			         (0x01c25000L)
 
-#define SUNXI_UART0_BASE			     (0x01c28000L)
-#define SUNXI_UART1_BASE			     (0x01c28400L)
-#define SUNXI_UART2_BASE			     (0x01c28800L)
-#define SUNXI_UART3_BASE			     (0x01c28c00L)
-#define SUNXI_UART4_BASE			     (0x01c29000L)
+#define SUNXI_UART0_BASE			     0x01c28000
+#define SUNXI_UART1_BASE			     0x01c28400
+#define SUNXI_UART2_BASE			     0x01c28800
+#define SUNXI_UART3_BASE			     0x01c28c00
+#define SUNXI_UART4_BASE			     0x01c29000
 
 #define SUNXI_TWI0_BASE			         (0x01c2ac00L)
 #define SUNXI_TWI1_BASE			         (0x01c2b000L)

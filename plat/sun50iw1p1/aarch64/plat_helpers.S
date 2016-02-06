@@ -59,20 +59,21 @@ func platform_smp_init
 	msr	cntvoff_el2, x0
 	ret
 
+#define UART_TX			0	/* Out: Transmit buffer */
+#define UART_LSR        	5       /* In:  Line Status Register */
+#define UART_LSR_TEMT_BIT	6	/* Transmitter empty */
+
+/* Use UART0 both for the normal console and for the crash console as well. */
+plat_crash_console_putc:
 func console_core_putc
-	ldr	x1, =0x01c28000
+	ldr	x1, =SUNXI_UART0_BASE
 1:
-	ldr     w2, [x1,#20]
-	tbz    w2, #6, 1b
-	str     w0, [x1,#0]
+	ldr	w2, [x1, #(UART_LSR * 4)]
+	tbz	w2, #UART_LSR_TEMT_BIT, 1b
+	str	w0, [x1, #0]
 	ret
 
+/* nothing to do here, just return 1 to indicate success */
 func plat_crash_console_init
 	mov w0, #1
 	ret
-
-func plat_crash_console_putc
-	 b      console_core_putc
-
-
-
