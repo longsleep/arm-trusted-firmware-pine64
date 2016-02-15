@@ -83,9 +83,6 @@ void sunxi_configure_mmu_el3(unsigned long total_base,
 			   unsigned long);
 int sunxi_config_setup(void);
 
-void sunxi_cci_init(void);
-void sunxi_cci_enable(void);
-
 void sunxi_gic_init(void);
 
 /* Declarations for sunxi_topology.c */

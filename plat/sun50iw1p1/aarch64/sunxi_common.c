@@ -169,25 +169,6 @@ uint64_t plat_get_syscnt_freq(void)
 	return 24 * 1000 * 1000;
 }
 
-void sunxi_cci_init(void)
-{
-	/*
-	 * Initialize CCI-400 driver
-	 */
-	
-}
-
-void sunxi_cci_enable(void)
-{
-	/*
-	 * Enable CCI-400 coherency for this cluster. No need
-	 * for locks as no other cpu is active at the
-	 * moment
-	 */
-	
-}
-
-
 void sunxi_gic_init(void)
 {
 	gic_setup();
