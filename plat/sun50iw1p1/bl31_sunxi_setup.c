@@ -221,31 +221,7 @@ void bl31_platform_setup(void)
 	//unsigned int reg_val;
 
 	/* Initialize the gic cpu and distributor interfaces */
-	sunxi_gic_init();
-#if 0
-
-	/*
-	 * TODO: Configure the CLCD before handing control to
-	 * linux. Need to see if a separate driver is needed
-	 * instead.
-	 */
-	mmio_write_32(VE_SYSREGS_BASE + V2M_SYS_CFGDATA, 0);
-	mmio_write_32(VE_SYSREGS_BASE + V2M_SYS_CFGCTRL,
-		      (1ull << 31) | (1 << 30) | (7 << 20) | (0 << 16));
-
-	/* Enable and initialize the System level generic timer */
-	mmio_write_32(SYS_CNTCTL_BASE + CNTCR_OFF, CNTCR_FCREQ(0) | CNTCR_EN);
-
-	/* Allow access to the System counter timer module */
-	reg_val = (1 << CNTACR_RPCT_SHIFT) | (1 << CNTACR_RVCT_SHIFT);
-	reg_val |= (1 << CNTACR_RFRQ_SHIFT) | (1 << CNTACR_RVOFF_SHIFT);
-	reg_val |= (1 << CNTACR_RWVT_SHIFT) | (1 << CNTACR_RWPT_SHIFT);
-	mmio_write_32(SYS_TIMCTL_BASE + CNTACR_BASE(0), reg_val);
-	mmio_write_32(SYS_TIMCTL_BASE + CNTACR_BASE(1), reg_val);
-
-	reg_val = (1 << CNTNSAR_NS_SHIFT(0)) | (1 << CNTNSAR_NS_SHIFT(1));
-	mmio_write_32(SYS_TIMCTL_BASE + CNTNSAR, reg_val);
-#endif
+	gic_setup();
 
 	/* Intialize the power controller */
 	//sunxi_pwrc_setup();
