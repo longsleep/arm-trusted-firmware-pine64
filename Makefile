@@ -426,7 +426,7 @@ ifeq (bl31.bin,$(notdir ${BIN}))
 	$${Q}git show HEAD --pretty=format:"%H" | head -n 1 > cur.log
 	$${Q}./tools/add_hash_bl31.sh -f $$@ -m bl31
 endif
-	@cp -v $$@ ../../tools/pack/chips/$(DEFAULT_PLAT)/bin/
+#	@cp -v $$@ ../../tools/pack/chips/$(DEFAULT_PLAT)/bin/
 
 .PHONY : bl$(1)
 bl$(1) : $(BUILD_DIR) $(BIN) $(DUMP)
