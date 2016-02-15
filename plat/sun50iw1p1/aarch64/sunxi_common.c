@@ -166,16 +166,7 @@ unsigned long plat_get_ns_image_entrypoint(void)
 
 uint64_t plat_get_syscnt_freq(void)
 {
-	uint64_t counter_base_frequency;
-
-	/* Read the frequency from Frequency modes table */
-	counter_base_frequency = 24<<20;//mmio_read_32(SYS_CNTCTL_BASE + CNTFID_OFF);
-
-	/* The first entry of the frequency modes table must not be 0 */
-	if (counter_base_frequency == 0)
-		panic();
-
-	return counter_base_frequency;
+	return 24 * 1000 * 1000;
 }
 
 void sunxi_cci_init(void)
